@@ -54,7 +54,6 @@ export default {
                 console.log('register: ', register);
 
                 if (register.data.statusCode == 200) {
-                    console.log("Registered :::");
                     alert("User Registerd Successfully!!")
                     this.$router.push("/login")
                 }
