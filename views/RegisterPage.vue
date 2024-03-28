@@ -1,7 +1,7 @@
 <template>
-    <div class="container" style="margin-top: 200px;">
-        <div class="d-flex flex-wrap justify-content-center">
-            <form class="col-4">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-center mt-5">
+            <form class="col-4 mt-5" enctype="multipart/form-data">
                  <div class="form-group mb-4">
                     <label for="Name" class="mb-2">Name</label>
                     <input type="text" class="form-control" id="Name" v-model="userName" placeholder="Enter Name">
@@ -9,6 +9,10 @@
                 <div class="form-group mb-4">
                     <label for="email" class="mb-2">Email address</label>
                     <input type="text" class="form-control" id="email" v-model="userEmail" placeholder="Enter email">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="userImage" class="mb-2">Profile Image</label>
+                    <input type="file" class="form-control" id="userImage" ref="userImage">
                 </div>
                 <div class="form-group mb-4">
                     <label for="password" class="mb-2">Password</label>
@@ -44,18 +48,23 @@ export default {
                     name: this.userName,
                     email: this.userEmail,
                     password: this.userPassword,
-                    role: this.userRole
                 }
 
-                let register = await axios.post('/register', {
-                    data: obj
-                })
+                let formData = new FormData();
+                formData.append("data", JSON.stringify(obj));
+                
+                let userImage = this.$refs.userImage.files[0];
+                formData.append("userImage", userImage);
+
+                let register = await axios.post('/register', formData)
                 
                 console.log('register: ', register);
 
                 if (register.data.statusCode == 200) {
                     alert("User Registerd Successfully!!")
                     this.$router.push("/login")
+                } else {
+                    alert(register.data.message)
                 }
                 
             } catch (error) {
